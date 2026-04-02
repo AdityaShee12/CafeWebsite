@@ -1,54 +1,58 @@
+import { Link } from "react-router-dom";
+
 /* ── Footer ── */
-const NAV = ["Menu", "About", "Gallery", "Reservations", "Contact"];
+const NAV = [
+  { name: "Home", path: "/" },
+  { name: "Menu", path: "/menu" },
+  { name: "Reservations", path: "/#reservations" },
+  { name: "Contact", path: "/contact" }
+];
 
 const Footer = () => (
     <footer style={{ background: "#080401", borderTop: "1px solid rgba(212,175,90,.1)" }}>
         <div className="max-w-7xl mx-auto" style={{ padding: "72px clamp(20px,5vw,56px)" }}>
-            <div className="grid mb-13" style={{ gridTemplateColumns: "2fr 1fr 1.2fr", gap: "clamp(28px,5vw,64px)" }}>
-                <div>
-                    <a href="#" className="block mb-4 no-underline" style={{ fontFamily: "'Playfair Display',serif", color: "#D4AF5A", fontSize: "1.75rem", fontWeight: 700 }}>☕ Aroma</a>
-                    <p className="mb-5.5" style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 300, fontSize: ".84rem", color: "rgba(245,237,214,.36)", lineHeight: 1.85, maxWidth: 240 }}>Where every cup tells a story.<br />Crafted with love since 2018.</p>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-13">
+                <div className="md:col-span-2">
+                    <Link to="/" className="block mb-4 no-underline font-playfair text-[#D4AF5A] text-[1.75rem] font-bold">☕ Aroma</Link>
+                    <p className="mb-5.5 font-outfit font-light text-[.84rem] text-[#F5EDD6]/40 leading-[1.85] max-w-[240px]">Where every cup tells a story.<br />Crafted with love since 2018.</p>
                     <div className="flex gap-2.25">
                         {["📸", "📘", "💬"].map((ic, i) => (
                             <a key={i} href="#"
-                                className="flex items-center justify-center no-underline"
-                                style={{ width: 34, height: 34, border: "1px solid rgba(212,175,90,.2)", borderRadius: "50%", fontSize: ".82rem", transition: "transform .25s" }}
-                                onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
-                                onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
+                                className="flex items-center justify-center no-underline w-[34px] h-[34px] border border-[#D4AF5A]/20 rounded-full text-[.82rem] transition-transform duration-250 hover:-translate-y-0.5"
                             >{ic}</a>
                         ))}
                     </div>
                 </div>
                 <div>
-                    <h4 style={{ fontFamily: "'Outfit',sans-serif", fontSize: ".66rem", fontWeight: 500, letterSpacing: ".18em", textTransform: "uppercase", color: "#D4AF5A", marginBottom: 18 }}>Quick Links</h4>
-                    <ul className="list-none p-0 m-0 flex flex-col gap-2.25">
+                    <h4 className="font-outfit text-[.66rem] font-medium tracking-[.18em] uppercase text-[#D4AF5A] mb-4">Quick Links</h4>
+                    <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
                         {NAV.map(l => (
-                            <li key={l}><a href={`#${l.toLowerCase()}`}
-                                style={{ fontFamily: "'Outfit',sans-serif", fontSize: ".86rem", fontWeight: 300, color: "rgba(245,237,214,.4)", textDecoration: "none", transition: "color .2s" }}
-                                onMouseEnter={e => e.currentTarget.style.color = "#D4AF5A"}
-                                onMouseLeave={e => e.currentTarget.style.color = "rgba(245,237,214,.4)"}
-                            >{l}</a></li>
+                            <li key={l.name}>
+                                <Link to={l.path} className="font-outfit text-[.86rem] font-light text-[#F5EDD6]/40 no-underline transition-colors duration-200 hover:text-[#D4AF5A]">
+                                    {l.name}
+                                </Link>
+                            </li>
                         ))}
                     </ul>
                 </div>
                 <div>
-                    <h4 style={{ fontFamily: "'Outfit',sans-serif", fontSize: ".66rem", fontWeight: 500, letterSpacing: ".18em", textTransform: "uppercase", color: "#D4AF5A", marginBottom: 18 }}>Contact</h4>
-                    <ul className="list-none p-0 m-0 flex flex-col gap-2.75">
+                    <h4 className="font-outfit text-[.66rem] font-medium tracking-[.18em] uppercase text-[#D4AF5A] mb-4">Contact</h4>
+                    <ul className="list-none p-0 m-0 flex flex-col gap-3">
                         {[["📍", "42 Coffee Lane, Park Street, Kolkata"], ["📞", "+91 98765 43210"], ["✉️", "hello@aromacafe.in"], ["🕐", "Mon–Sun: 8 AM – 11 PM"]].map(([ic, tx]) => (
-                            <li key={tx} className="flex items-start gap-2.25">
-                                <span className="shrink-0 mt-px" style={{ fontSize: ".8rem" }}>{ic}</span>
-                                <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: ".82rem", fontWeight: 300, color: "rgba(245,237,214,.4)", lineHeight: 1.55 }}>{tx}</span>
+                            <li key={tx} className="flex items-start gap-2.5">
+                                <span className="shrink-0 mt-px text-[.8rem]">{ic}</span>
+                                <span className="font-outfit text-[.82rem] font-light text-[#F5EDD6]/40 leading-[1.55]">{tx}</span>
                             </li>
                         ))}
                     </ul>
                 </div>
             </div>
-            <div className="flex items-center justify-between pt-5" style={{ borderTop: "1px solid rgba(212,175,90,.08)" }}>
-                <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: ".72rem", color: "rgba(245,237,214,.2)", fontWeight: 300 }}>© {new Date().getFullYear()} Aroma Cafe. All rights reserved.</p>
-                <a href="/admin/login" style={{ fontFamily: "'Outfit',sans-serif", fontSize: ".66rem", color: "rgba(245,237,214,.13)", letterSpacing: ".12em", textTransform: "uppercase", textDecoration: "none" }}>Admin</a>
+            <div className="flex items-center justify-between pt-5 border-t border-[#D4AF5A]/10 mt-10">
+                <p className="font-outfit text-[.72rem] text-[#F5EDD6]/20 font-light">© {new Date().getFullYear()} Aroma Cafe. All rights reserved.</p>
+                <Link to="/admin" className="font-outfit text-[.66rem] text-[#F5EDD6]/10 tracking-[.12em] uppercase no-underline hover:text-[#F5EDD6]/30 transition-colors">Admin</Link>
             </div>
         </div>
     </footer>
 );
 
-export default Footer
+export default Footer;
