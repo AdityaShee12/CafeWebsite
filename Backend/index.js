@@ -11,10 +11,10 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 dotenv.config();
 
 const app = express();
-
+//process.env.CLIENT_URL
 /* ── Middleware ── */
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: "https://aroma-cafe-omega.vercel.app",
   credentials: true,
 }));
 app.use(express.json());
