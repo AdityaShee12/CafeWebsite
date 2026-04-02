@@ -1,7 +1,7 @@
 import axios from "axios";
-
+// import.meta.env.VITE_BACKEND_API
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_API,
+  baseURL: "https://cafewebsite-e23o.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
