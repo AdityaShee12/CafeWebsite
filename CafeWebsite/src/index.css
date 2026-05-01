@@ -196,3 +196,30 @@ button {
 .input-field::placeholder {
   color: rgba(245, 239, 235, 0.4);
 }
+
+/* Global Page Layouts (Internal Pages) */
+.page-wrapper {
+  padding-top: 120px; /* Account for sticky navbar */
+  min-height: calc(100vh - 300px);
+  padding-bottom: 6rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.page-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 1rem;
+}
+
+.page-subtitle {
+  font-family: var(--font-body);
+  color: var(--color-beige);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  font-weight: 300;
+  line-height: 1.6;
+}
