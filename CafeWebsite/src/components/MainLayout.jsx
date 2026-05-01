@@ -1,26 +1,27 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const MainLayout = () => {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const location = useLocation();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0F0802]">
-      <ToastContainer position="top-right" theme="dark" />
-      <Navbar scrollY={scrollY} />
-      <main className="flex-grow pt-[76px]">
-        <Outlet />
-      </main>
+    <div className="app-container">
+      <Navbar />
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={location.pathname}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="main-content"
+        >
+          <Outlet />
+        </motion.main>
+      </AnimatePresence>
       <Footer />
     </div>
   );

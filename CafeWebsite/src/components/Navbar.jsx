@@ -1,60 +1,123 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiMenu, FiX, FiShoppingBag } from 'react-icons/fi';
+import './Navbar.css';
 
-const Navbar = ({ scrollY }) => {
-    const [open, setOpen] = useState(false);
-    const location = useLocation();
-    const solid = scrollY > 60 || location.pathname !== "/";
-    const NAV = [
-      { name: "Home", path: "/" },
-      { name: "Menu", path: "/menu" },
-      { name: "Contact", path: "/contact" },
-      { name: "Login", path: "/login" },
-    ];
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
-    return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 font-outfit ${solid ? 'bg-[#0F0802]/95 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`} style={{ padding: "0 clamp(20px,5vw,56px)" }}>
-            <div className="max-w-7xl mx-auto flex items-center h-[76px] justify-between">
-                <Link to="/" className="shrink-0 no-underline font-playfair text-[#D4AF5A] text-2xl font-bold tracking-wider">☕ Aroma</Link>
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-                <div className="hidden md:flex flex-1 justify-center gap-1">
-                    {NAV.map(l => (
-                        <Link key={l.name} to={l.path}
-                            className={`px-4 py-2 text-[0.7rem] font-medium tracking-[0.14em] uppercase no-underline transition-colors duration-200 rounded-sm ${location.pathname === l.path ? 'text-[#D4AF5A]' : 'text-white/70 hover:text-[#D4AF5A]'}`}
-                        >
-                            {l.name}
-                        </Link>
-                    ))}
-                </div>
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
-                <div className="hidden md:flex items-center gap-4">
-                    <Link to="/#reservations" className="shrink-0 no-underline px-6 py-2.5 bg-[#D4AF5A] text-[#0F0802] font-outfit text-[0.7rem] font-medium tracking-[0.14em] uppercase rounded-sm transition-transform duration-250 hover:-translate-y-0.5"
-                    >Book Table</Link>
-                </div>
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Menu', path: '/menu' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
+  ];
 
-                <button onClick={() => setOpen(o => !o)} className="md:hidden bg-transparent border-0 cursor-pointer p-1.5 text-[#D4AF5A] ml-auto">
-                    {open
-                        ? <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                        : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>}
-                </button>
+  return (
+    <motion.nav 
+      className={`navbar ${isScrolled ? 'scrolled glass' : ''}`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
+      <div className="container nav-container">
+        {/* Logo */}
+        <Link to="/" className="nav-logo">
+          AURORA<span>.</span>
+        </Link>
+
+        {/* Desktop Links */}
+        <div className="nav-links desktop-only">
+          {navLinks.map((link, index) => (
+            <Link 
+              key={index} 
+              to={link.path} 
+              className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+            >
+              {link.name}
+              {location.pathname === link.path && (
+                <motion.div 
+                  layoutId="activeIndicator"
+                  className="active-indicator"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop Actions */}
+        <div className="nav-actions desktop-only">
+          <button className="cart-btn" aria-label="Cart">
+            <FiShoppingBag />
+            <span className="cart-count">0</span>
+          </button>
+          <Link to="/contact" className="btn btn-outline btn-sm">Book a Table</Link>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <button 
+          className="mobile-toggle mobile-only"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? <FiX /> : <FiMenu />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            className="mobile-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: '100vh' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <div className="mobile-menu-inner">
+              {navLinks.map((link, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                >
+                  <Link to={link.path} className="mobile-link">
+                    {link.name}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div 
+                className="mobile-actions"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Link to="/contact" className="btn btn-primary w-full text-center">Book a Table</Link>
+              </motion.div>
             </div>
-
-            <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-[#0F0802]/95 ${open ? 'max-h-[340px]' : 'max-h-0'}`}>
-                <div className="flex flex-col gap-1 px-4 pb-6">
-                    {NAV.map(l => (
-                        <Link key={l.name} to={l.path} onClick={() => setOpen(false)}
-                            className={`py-3.5 text-[0.86rem] font-medium tracking-[0.12em] uppercase border-b border-[#D4AF5A]/10 no-underline ${location.pathname === l.path ? 'text-[#D4AF5A]' : 'text-white/70'}`}>
-                            {l.name}
-                        </Link>
-                    ))}
-                    <Link to="/#reservations" onClick={() => setOpen(false)}
-                        className="mt-4 p-3.5 text-center text-[0.72rem] font-medium tracking-[0.14em] uppercase bg-[#D4AF5A] text-[#0F0802] rounded-sm no-underline">
-                        Book Table
-                    </Link>
-                </div>
-            </div>
-        </nav>
-    );
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  );
 };
 
 export default Navbar;
